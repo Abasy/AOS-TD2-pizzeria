@@ -16,7 +16,5 @@ public class ManageUsersServiceImpl implements ManageUsersService {
 	public String signUp() {
 		return "SignUp";
 	}
-
-	
 	
 }
