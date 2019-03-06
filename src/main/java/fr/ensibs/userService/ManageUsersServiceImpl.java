@@ -122,7 +122,7 @@ public class ManageUsersServiceImpl implements ManageUsersService {
 	 * @param token a validate token of an an existing administrator
 	 * @return the user
 	 */
-	public Person getPersonByID(int id, String token) {
+	public Person getPersonByID(@WebParam(name = "id_user") int id, String token) {
 		if (id >= 0 || id < this.id_user) {
 			for (Person check_bdd_person : this.persons) {
 				if (check_bdd_person.isAdmin() == true && check_bdd_person.getToken().equals(token)) {
@@ -144,7 +144,7 @@ public class ManageUsersServiceImpl implements ManageUsersService {
 	 * @param token a validate token of an an existing administrator
 	 * @return message information if the user is deleted correctly
 	 */
-	public String deleteUser(int id, String token) {
+	public String deleteUser(@WebParam(name = "id_user") int id, String token) {
 		if (id >= 0 && id < this.id_user) {
 			for (Person check_bdd_person : this.persons) {
 				if (check_bdd_person.getToken().equals(token) == true) {
