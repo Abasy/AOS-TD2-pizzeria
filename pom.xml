@@ -49,7 +49,7 @@
 							<goal>wsgen</goal>
 						</goals>
 						<configuration>
-							<sei>fr.ensibs.pizzeria.ManageUsersServiceImpl</sei>
+							<sei>fr.ensibs.userService.ManageUsersService</sei>
 							<genWsdl>true</genWsdl>
 							<keep>true</keep>
 						</configuration>

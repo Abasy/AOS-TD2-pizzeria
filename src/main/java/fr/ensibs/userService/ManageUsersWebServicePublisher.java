@@ -1,4 +1,4 @@
-package fr.ensibs.pizzeria;
+package fr.ensibs.userService;
 
 import javax.xml.ws.Endpoint;
 
