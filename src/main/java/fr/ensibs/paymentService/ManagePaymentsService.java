@@ -2,7 +2,7 @@ package fr.ensibs.paymentService;
 
 import javax.jws.WebService;
 
-@WebService(name = "ManagePaymentsService", targetNamespace = "http://pizzeria.ensibs.fr/paiement")
+@WebService(name = "ManagePaymentsService", targetNamespace = "http://pizzeria.ensibs.fr/manage_payments")
 public interface ManagePaymentsService {
 	/**
 	 * Method to validate payment of an order by a validate token and an existing non payed order
@@ -18,5 +18,5 @@ public interface ManagePaymentsService {
 	 * @param token a validate existing token
 	 * @return the information about the order
 	 */
-	String previsionner_facture(int id_order, String token) ;
+	String previewInvoice(int id_order, String token) ;
 }

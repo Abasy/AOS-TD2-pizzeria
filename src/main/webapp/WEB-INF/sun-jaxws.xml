@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<endpoints xmlns='http://java.sun.com/xml/ns/jax-ws/ri/runtime' version='2.0'>
+    <endpoint
+        name='ManageUsersService'
+        implementation='fr.ensibs.userService.ManageUsersServiceImpl'
+        url-pattern='/pizzeria.ensibs.fr/manage_users'/>
+	<endpoint
+        name='ManageOrdersService'
+        implementation='fr.ensibs.pizzaService.ManageOrdersServiceImpl'
+        url-pattern='/pizzeria.ensibs.fr/manage_orders'/>
+	<endpoint
+        name='ManagePaymentsService'
+        implementation='fr.ensibs.paymentService.ManagePaymentsServiceImpl'
+        url-pattern='/pizzeria.ensibs.fr/manage_payments'/>
+</endpoints>

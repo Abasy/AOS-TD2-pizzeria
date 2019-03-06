@@ -2,11 +2,14 @@ package fr.ensibs.pizzaService;
 
 import java.util.ArrayList;
 
+import javax.jws.WebService;
+
 import fr.ensibs.common.Order;
 import fr.ensibs.common.Person;
 import fr.ensibs.common.Pizza;
 import fr.ensibs.userService.ManageUsersServiceImpl;
 
+@WebService(endpointInterface="fr.ensibs.pizzaService.ManageOrdersServiceImpl", serviceName="ManageOrdersService", portName="ManageOrdersServicePort")
 public class ManageOrdersServiceImpl implements ManageOrdersService {
 	
 	public static ArrayList<Order> orders = new ArrayList<Order>() ;

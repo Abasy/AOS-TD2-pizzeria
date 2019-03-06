@@ -7,7 +7,7 @@ import javax.jws.WebService;
 import fr.ensibs.common.Order;
 import fr.ensibs.common.Pizza;
 
-@WebService(name = "ManageOrdersService", targetNamespace = "http://pizzeria.ensibs.fr/order")
+@WebService(name = "ManageOrdersService", targetNamespace = "http://pizzeria.ensibs.fr/manage_orders")
 public interface ManageOrdersService {
 	
 	/**

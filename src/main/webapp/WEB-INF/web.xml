@@ -1,0 +1,27 @@
+<web-app>
+    <display-name>AOS-TD2-pizzeria</display-name>
+    <listener>
+        <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
+    </listener>
+    <servlet>
+        <display-name>ManageUsersService</display-name>
+        <servlet-name>manage_users</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+	    <servlet>
+        <display-name>ManagerOrdersService</display-name>
+        <servlet-name>manage_orders</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+	    <servlet>
+        <display-name>ManagerPaymentsService</display-name>
+        <servlet-name>manage_payments</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <session-config>
+        <session-timeout>60</session-timeout>
+    </session-config>
+</web-app>

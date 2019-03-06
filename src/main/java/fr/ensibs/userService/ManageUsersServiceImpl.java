@@ -12,7 +12,7 @@ import fr.ensibs.pizzaService.ManageOrdersServiceImpl;
  * by its id
  * @author Nadjim ABASY and Robin ASPE
  */
-@WebService(endpointInterface="fr.ensibs.userService.ManageUsersService", serviceName="ManageUsersService", portName="PizzeriaPort")
+@WebService(endpointInterface="fr.ensibs.userService.ManageUsersServiceImpl", serviceName="ManageUsersService", portName="ManageUsersServicePort")
 public class ManageUsersServiceImpl implements ManageUsersService {
 	public static ArrayList<Person> persons = new ArrayList<Person>();
 	public static int id_user = 0;

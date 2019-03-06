@@ -12,7 +12,7 @@ import fr.ensibs.common.Person;
  * by its id
  * @author Nadjim ABASY and Robin ASPE
  */
-@WebService(name = "ManageUsersService", targetNamespace="http://pizzeria.ensibs.fr/User")
+@WebService(name = "ManageUsersService", targetNamespace="http:///pizzeria.ensibs.fr/manage_users")
 public interface ManageUsersService {
 	
 	/**
