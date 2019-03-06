@@ -2,6 +2,8 @@ package fr.ensibs.userService;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+
+import javax.jws.WebParam;
 import javax.jws.WebService;
 import fr.ensibs.common.Person;
 import fr.ensibs.pizzaService.ManageOrdersServiceImpl;
@@ -23,7 +25,7 @@ public class ManageUsersServiceImpl implements ManageUsersService {
 	 * @param psw the password of the user
 	 * @return A token to identify a customer or an administrator
 	 */
-	public String signIn(String name, String psw) {
+	public String signIn(@WebParam(name = "name") String name,@WebParam(name = "password") String psw) {
 		for (Person check_bdd_person : this.persons) {
 			if (check_bdd_person.getName_user().equals(name) == true && check_bdd_person.getPsw().equals(psw) == true) {
 				if(check_bdd_person.getToken().equals("")) {
@@ -70,9 +72,9 @@ public class ManageUsersServiceImpl implements ManageUsersService {
 	 * @param isAdmin check if the user is admin or customer
 	 * @return Message information about if the subscription was successfully done
 	 */
-	public String signUp(String name, String psw, String psw_verification, boolean isAdmin) {
+	public String signUp(@WebParam(name = "name") String name, @WebParam(name = "password") String psw, @WebParam(name = "password_verification") String psw_verification, @WebParam(name = "Admin_count_or_not")boolean isAdmin) {
 		for( Person check_bdd_person : this.persons ) {
-			if (check_bdd_person.getName_user().equals(name) == true && check_bdd_person.getPsw().equals(psw) == true ) {
+			if (check_bdd_person.getName_user().equals(name) == true && check_bdd_person.getPsw().equals(psw) == true ) {//Really bad idea to use the psw here
 				return "This count already exist." ;
 			}
 		}
@@ -80,7 +82,8 @@ public class ManageUsersServiceImpl implements ManageUsersService {
 		if (psw.equals(psw_verification) == true ) {
 			if ( name.length() > 1 ) {
 				if ( name.length() <= 10 ) {
-					Person new_person = new Person( this.id_user++, name, psw, "", isAdmin ) ;
+					Person new_person = new Person( this.id_user++, name, psw, "", isAdmin );
+					System.out.println("static id_user => "+this.id_user + " and id_person => "+new_person.getId_person());
 					try {
 						Thread.sleep( 5000 ) ;
 					} catch (InterruptedException e) {
@@ -102,10 +105,10 @@ public class ManageUsersServiceImpl implements ManageUsersService {
 	 * @return the list of all users
 	 */
 	public ArrayList<Person> getPersons(String token) {
-		for ( Person check_bdd_person : this.persons ) {
+		for (Person check_bdd_person : this.persons) {
 			if (check_bdd_person.getToken().equals(token) ) {
-				if ( check_bdd_person.isAdmin()) {
-					return this.persons ;
+				if (check_bdd_person.isAdmin()) {
+					return this.persons;
 				}
 				throw new NullPointerException( "Action impossible, you are not an administrator." ) ;
 			}		
@@ -120,7 +123,7 @@ public class ManageUsersServiceImpl implements ManageUsersService {
 	 * @return the user
 	 */
 	public Person getPersonByID(int id, String token) {
-		if (id >= 0 || id < this.persons.size()) {
+		if (id >= 0 || id < this.id_user) {
 			for (Person check_bdd_person : this.persons) {
 				if (check_bdd_person.isAdmin() == true && check_bdd_person.getToken().equals(token)) {
 					return check_bdd_person;
@@ -142,7 +145,7 @@ public class ManageUsersServiceImpl implements ManageUsersService {
 	 * @return message information if the user is deleted correctly
 	 */
 	public String deleteUser(int id, String token) {
-		if (id >= 0 && id < this.persons.size()) {
+		if (id >= 0 && id < this.id_user) {
 			for (Person check_bdd_person : this.persons) {
 				if (check_bdd_person.getToken().equals(token) == true) {
 					Person deleted_user = this.persons.remove(id) ;

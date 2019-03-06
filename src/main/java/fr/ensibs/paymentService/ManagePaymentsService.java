@@ -1,5 +1,6 @@
 package fr.ensibs.paymentService;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 @WebService(name = "ManagePaymentsService", targetNamespace = "http://pizzeria.ensibs.fr/manage_payments")
@@ -10,7 +11,7 @@ public interface ManagePaymentsService {
 	 * @param token a validate token
 	 * @return Set the status of the order, and display an information message of the operation done
 	 */
-	String payOrder(int id_order, String token) ;
+	String payOrder(@WebParam(name = "id_order") int id_order, String token) ;
 	
 	/**
 	 * Method to visualize the bill or the order if it's not yet payed
@@ -18,5 +19,5 @@ public interface ManagePaymentsService {
 	 * @param token a validate existing token
 	 * @return the information about the order
 	 */
-	String previewInvoice(int id_order, String token) ;
+	String previewInvoice(@WebParam(name = "id_order") int id_order, String token) ;
 }

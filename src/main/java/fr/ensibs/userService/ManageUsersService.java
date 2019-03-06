@@ -2,6 +2,7 @@ package fr.ensibs.userService;
 
 import java.util.ArrayList;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import fr.ensibs.common.Person;
@@ -21,7 +22,7 @@ public interface ManageUsersService {
 	 * @param psw the password of the user
 	 * @return A token to identify a customer or an administrator
 	 */
-	String signIn(String name, String psw);
+	String signIn(@WebParam(name = "name") String name, @WebParam(name = "password") String psw);
 	
 	/**
 	 * Sign out a customer or an administrator
@@ -38,7 +39,7 @@ public interface ManageUsersService {
 	 * @param isAdmin check if the user is admin or customer
 	 * @return Message information about if the subscription was successfully done
 	 */
-	String signUp(String name, String psw, String psw_verification, boolean isAdmin);
+	String signUp(@WebParam(name = "name") String name, @WebParam(name = "password") String psw, @WebParam(name = "password_verification") String psw_verification, @WebParam(name = "Admin_count_or_not")boolean isAdmin);
 	
 	/**
 	 * Allow to display all users subscribed to the services
@@ -53,7 +54,7 @@ public interface ManageUsersService {
 	 * @param token a validate token of an an existing administrator
 	 * @return the user
 	 */
-	Person getPersonByID(int id , String token);
+	Person getPersonByID(@WebParam(name = "id_user") int id , String token);
 	
 	/**
 	 * Method to delete user by permission of an administrator
@@ -61,5 +62,5 @@ public interface ManageUsersService {
 	 * @param token a validate token of an an existing administrator
 	 * @return message information if the user is deleted correctly
 	 */
-	String deleteUser(int id , String token );
+	String deleteUser(@WebParam(name = "id_user") int id , String token);
 }

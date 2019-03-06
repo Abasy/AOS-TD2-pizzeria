@@ -48,9 +48,9 @@ public class Person {
 	/**
 	 * @param id_user the id_user to set
 	 */
-	/*public void setId_user(int id_user) {
-		this.id_user = id_user;
-	}*/
+	public void setId_user(int id_user) {
+		this.id_person = id_user;
+	}
 
 	/**
 	 * @return the name_user

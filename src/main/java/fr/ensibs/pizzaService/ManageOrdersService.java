@@ -2,6 +2,7 @@ package fr.ensibs.pizzaService;
 
 import java.util.ArrayList;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import fr.ensibs.common.Order;
@@ -16,7 +17,7 @@ public interface ManageOrdersService {
 	 * @param quantity the number of the pizza
 	 * @return message information to indicate whether the order is taken or not
 	 */
-	String orderPizza(int id_pizza, int quantity, String token);
+	String orderPizza(@WebParam(name = "id_pizza") int id_pizza, @WebParam(name = "quantity_of_pizza") int quantity, String token);
 	
 	/**
 	 * Method to cancel an order not already payed
@@ -24,7 +25,7 @@ public interface ManageOrdersService {
 	 * @param token a validate token of an existing connected user
 	 * @return message information to indicate whether the command is canceled or not
 	 */
-	String cancelOrderPizza(int id_order, String token);
+	String cancelOrderPizza(@WebParam(name = "id_of_order") int id_order, String token);
 	
 	/**
 	 * Method to display all the order taken by an user identified by his token
@@ -40,7 +41,7 @@ public interface ManageOrdersService {
 	 * @param price the price of the pizza
 	 * @return message information to indicate whether the pizza is added or not
 	 */
-	String addPizza(String name_pizza, String description, double prix, String token);
+	String addPizza(@WebParam(name = "name_pizza") String name_pizza, @WebParam(name = "description") String description, @WebParam(name = "price") double price, String token);
 	
 	/**
 	 * Method to delete a pizza from the menu
@@ -48,7 +49,7 @@ public interface ManageOrdersService {
 	 * @param token a validate token
 	 * @return message information to indicate whether the pizza is deleted or not
 	 */
-	String deletePizza(String name_pizza, String token);
+	String deletePizza(@WebParam(name = "name_pizza") String name_pizza, String token);
 	
 	/**
 	 * Method to display the menu of the pizzeria
@@ -61,5 +62,5 @@ public interface ManageOrdersService {
 	 * @param name_pizza the name of the pizza 
 	 * @return A Pizza from the array list
 	 */
-	Pizza getPizzaById (String name_pizza);
+	Pizza getPizzaById (@WebParam(name = "name_pizza") String name_pizza);
 }
