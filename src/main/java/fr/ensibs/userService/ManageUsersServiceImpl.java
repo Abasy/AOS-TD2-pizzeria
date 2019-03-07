@@ -5,8 +5,11 @@ import java.util.ArrayList;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
+
+import fr.ensibs.common.InvalidTokenException;
+import fr.ensibs.common.NoPermissionException;
 import fr.ensibs.common.Person;
-import fr.ensibs.pizzaService.ManageOrdersServiceImpl;
+import fr.ensibs.common.Person.PERMISSION;
 
 /**
  * Manage all the users. Each user can sign up, sign in and sign out.
@@ -16,8 +19,16 @@ import fr.ensibs.pizzaService.ManageOrdersServiceImpl;
  */
 @WebService(endpointInterface="fr.ensibs.userService.ManageUsersServiceImpl", serviceName="ManageUsersService", portName="ManageUsersServicePort")
 public class ManageUsersServiceImpl implements ManageUsersService {
-	public static ArrayList<Person> persons = new ArrayList<Person>();
-	public static int id_user = 0;
+	
+	private int last_id;
+	private ArrayList<Integer> free_id;
+	private ArrayList<Person> persons;
+	
+	public ManageUsersServiceImpl() {
+		this.last_id = 0;
+		this.free_id = new ArrayList<Integer>();
+		this.persons = new ArrayList<Person>();
+	}
 	
 	/**
 	 * Sign in a customer or an administrator to the pizzeria services
@@ -25,7 +36,7 @@ public class ManageUsersServiceImpl implements ManageUsersService {
 	 * @param psw the password of the user
 	 * @return A token to identify a customer or an administrator
 	 */
-	public String signIn(@WebParam(name = "name") String name,@WebParam(name = "password") String psw) {
+	public String signIn(@WebParam(name = "name") String name, @WebParam(name = "password") String psw) {
 		for (Person check_bdd_person : this.persons) {
 			if (check_bdd_person.getName_user().equals(name) == true && check_bdd_person.getPsw().equals(psw) == true) {
 				if(check_bdd_person.getToken().equals("")) {
@@ -46,22 +57,19 @@ public class ManageUsersServiceImpl implements ManageUsersService {
 
 	/**
 	 * Sign out a customer or an administrator
-	 * @param token the token use during a session
+	 * @param token the token used during a session
 	 * @return message information about if the logout was done successfully
+	 * @throws InvalidTokenException 
 	 */
-	public String signOut(String token) {
+	public String signOut(String token) throws InvalidTokenException {
 		for (Person check_bdd_person : this.persons) {
-			if (check_bdd_person.getToken().equals(token) == true) {
-				for(int i = 0; i < ManageOrdersServiceImpl.orders.size();i++){
-				    if(ManageOrdersServiceImpl.orders.get(i).getToken().equals(token)){
-				    	ManageOrdersServiceImpl.orders.remove(i--);
-				    }
-				}
+			if (check_bdd_person.getToken().equals(token) == true) 
+			{
 				check_bdd_person.setToken("");
-				return "Successful logout, we hope to see you again soon " + check_bdd_person.getName_user() + " (All your unpaid orders are canceled)." ;
+				return "Successful logout, we hope to see you again soon " + check_bdd_person.getName_user() + ". " ;
 			}
 		}
-		return "Token invalide." ;
+		throw new InvalidTokenException("Invalid token " + token + "trying to sign out.") ;
 	}
 
 	/**
@@ -72,89 +80,135 @@ public class ManageUsersServiceImpl implements ManageUsersService {
 	 * @param isAdmin check if the user is admin or customer
 	 * @return Message information about if the subscription was successfully done
 	 */
-	public String signUp(@WebParam(name = "name") String name, @WebParam(name = "password") String psw, @WebParam(name = "password_verification") String psw_verification, @WebParam(name = "Admin_count_or_not")boolean isAdmin) {
+	public String signUp(@WebParam(name = "name") String name, @WebParam(name = "password") String psw, @WebParam(name = "password_verification") String psw_verification, @WebParam(name = "Permission level") Person.PERMISSION permission) {
 		for( Person check_bdd_person : this.persons ) {
-			if (check_bdd_person.getName_user().equals(name) == true && check_bdd_person.getPsw().equals(psw) == true ) {//Really bad idea to use the psw here
-				return "This count already exist." ;
+			if (check_bdd_person.getName_user().equals(name) == true ) {
+				return "This username already exists." ;
 			}
 		}
 		
 		if (psw.equals(psw_verification) == true ) {
 			if ( name.length() > 1 ) {
-				if ( name.length() <= 10 ) {
-					Person new_person = new Person( this.id_user++, name, psw, "", isAdmin );
-					System.out.println("static id_user => "+this.id_user + " and id_person => "+new_person.getId_person());
-					try {
-						Thread.sleep( 5000 ) ;
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+				if ( name.length() <= 16 ) {
+					if ( permission != Person.PERMISSION.USER && permission != Person.PERMISSION.ROOT )
+					{
+						Person new_person = new Person( this.next_id_user(), name, psw, "", permission);
+						System.out.println("new id_person signed up => "+new_person.getId_person());
+						this.persons.add(new_person) ;
+						return "Inscription success." ;
 					}
-					this.persons.add(new_person) ;
-					return "Inscription reussie." ;
+					return "User permission not recognised";
 				}
-				return "The entered name is too long (more than 10 characters)." ;
+				return "The entered name is too long (more than 16 characters)." ;
 			}
-			return "The name enter is too short (less than 2 characters)." ;
+			return "The name entered is too short (less than 2 characters)." ;
 		}
-		return "Passwords are different from each other" ;
+		return "Passwords are not identical." ;
 	}
 
 	/**
 	 * Allow to display all users subscribed to the services
 	 * @param token a validate token of an existing administrator
 	 * @return the list of all users
+	 * @throws NoPermissionException 
 	 */
-	public ArrayList<Person> getPersons(String token) {
-		for (Person check_bdd_person : this.persons) {
-			if (check_bdd_person.getToken().equals(token) ) {
-				if (check_bdd_person.isAdmin()) {
-					return this.persons;
-				}
-				throw new NullPointerException( "Action impossible, you are not an administrator." ) ;
-			}		
-		}
-		throw new NullPointerException( "Invalid token." ) ;
+	public ArrayList<Person> getPersons(String token) throws NoPermissionException {
+		if (this.getTokenPermission(token) == PERMISSION.ROOT)
+			{
+				return this.persons;
+			}
+		else
+			throw new NoPermissionException(PERMISSION.ROOT);
 	}
 
-	/**
-	 * Allow to get a User from the list of all users
-	 * @param id the id of a user
-	 * @param token a validate token of an an existing administrator
-	 * @return the user
-	 */
-	public Person getPersonByID(@WebParam(name = "id_user") int id, String token) {
-		if (id >= 0 || id < this.id_user) {
-			for (Person check_bdd_person : this.persons) {
-				if (check_bdd_person.isAdmin() == true && check_bdd_person.getToken().equals(token)) {
-					return check_bdd_person;
+
+	public Person getPersonByID(@WebParam(name = "id_user") int id, String token) throws NoPermissionException {
+		if (this.getTokenPermission(token) == PERMISSION.ROOT)
+		{
+			for(Person pers : this.persons){
+				if (pers.getId_person() == id)
+				{
+					return pers;
 				}
 			}
-			
-			if (this.persons.get(id).getToken().equals(token)) {
-				return this.persons.get(id) ;
-			}
-			throw new NullPointerException( "Access restricted to the administrator." ) ;
+			return null;
 		}
-		throw new NullPointerException( "Invalid id." ) ;
+		else 
+			throw new NoPermissionException(PERMISSION.ROOT);
 	}
 
+	public Person getPersonByToken(@WebParam(name = "token_user")String token) {
+		if (token == "")
+		{
+			return null;
+		}
+		for(Person pers : this.persons){
+			if (pers.getToken() == token)
+			{
+				return pers;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Method to delete user by permission of an administrator
-	 * @param id the id of the user
+	 * @param id the id of the user to delete
 	 * @param token a validate token of an an existing administrator
 	 * @return message information if the user is deleted correctly
+	 * @throws NoPermissionException 
 	 */
-	public String deleteUser(@WebParam(name = "id_user") int id, String token) {
-		if (id >= 0 && id < this.id_user) {
-			for (Person check_bdd_person : this.persons) {
-				if (check_bdd_person.getToken().equals(token) == true) {
-					Person deleted_user = this.persons.remove(id) ;
-					return deleted_user.getName_user() + " is no longer a customer." ;
+	public String deleteUser(@WebParam(name = "id_user") int id, String token) throws NoPermissionException {
+		if (this.getTokenPermission(token) == PERMISSION.ROOT)
+		{
+			for(Person pers : this.persons){
+				if (pers.getId_person() == id)
+				{
+					this.persons.remove(pers);
+					this.free_id.add(id);
 				}
 			}
-			return "Only an administrator can delete a user" ;
+			return null;
 		}
-		return "Invalid Id" ;
+		else 
+			throw new NoPermissionException(PERMISSION.ROOT);
 	}
+	
+	/**
+	 * Method to get the permission equivalent of a token. SECURICY ALERT: CAN BE USED TO TEST BRUTE-FORCE CREATED TOKENS
+	 * @param token The token to convert in a permission equivalent
+	 * @return the permission of the token, or PERMISSION.NONE if the token doesn't exists
+	 */
+	public PERMISSION getTokenPermission(String token) {
+		Person p = this.getPersonByToken(token);
+		if (p == null)
+			return PERMISSION.NONE;
+		else
+			return p.permission();
+};
+	
+	
+	/**
+	 * Private method getting the next free ID for a new user.
+	 * @return A new ID that can be used to sign in a new user
+	 */
+	private int next_id_user() {
+		
+		int result = 0;
+		
+		if (this.free_id.isEmpty())
+		{
+			result = this.last_id;
+			last_id++;
+		}
+		else
+		{
+			result = this.free_id.remove(0);
+		}
+		
+		return result;
+	}
+
+
 	
 }

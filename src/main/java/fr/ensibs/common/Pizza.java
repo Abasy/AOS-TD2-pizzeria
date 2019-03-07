@@ -8,10 +8,10 @@ public class Pizza {
 	
 	/**
 	 * Constructor with parameters
-	 * @param id id of the pizza
-	 * @param nom name of the pizza
-	 * @param description description of the pizza
-	 * @param prix the price of each unity of the pizza
+	 * @param id Unique identifier of the pizza
+	 * @param name Name of the pizza
+	 * @param description Description of the pizza
+	 * @param price Price for a single pizza
 	 */
 	public Pizza(int id, String name, String description, double price) {
 		this.id_pizza = id;
