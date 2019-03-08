@@ -1,4 +1,5 @@
 # AOS - TD2 - Pizzeria
+ASPE et ABASY
 Mini Project to get a service of pizzeria running.
 
 Using API with jax-ws.
@@ -11,3 +12,10 @@ Using API with jax-ws.
 * fr.ensibs.paymentService
 * fr.ensibs.common
 * fr.ensibs.publisher
+
+Les wdsl se trouvent sur les adresses:
+
+http://localhost:9991/ws/pizzeria/manage_users
+http://localhost:9991/ws/pizzeria/manage_pizzas
+http://localhost:9991/ws/pizzeria/manage_orders
+http://localhost:9991/ws/pizzeria/manage_payments
