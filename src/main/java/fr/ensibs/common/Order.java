@@ -1,11 +1,18 @@
 package fr.ensibs.common;
 
+import javax.xml.bind.annotation.XmlElement;
+
+/**
+ * Class that design an order of a certain quantity of a single type of pizza
+ * @author Nadjim ABASY and Robin ASPE
+ */
 public class Order {
 	
 	public enum STATUS {ACTIVE, CANCELLED, PAID}
 	
 	private int id_order; 
 	private String name_pizza;
+	@XmlElement(name = "id_user")
 	private int user_id;
 	private int quantity;
 	private double total_price;

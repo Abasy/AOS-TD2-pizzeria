@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import fr.ensibs.common.InvalidTokenException;
 import fr.ensibs.common.NoPermissionException;
 import fr.ensibs.common.Pizza;
 import fr.ensibs.common.Person.PERMISSION;
@@ -29,7 +30,7 @@ public class ManagePizzasServiceImpl implements ManagePizzasService {
 		this.userManager = userManager;
 	}
 
-	public Pizza addPizza(String name_pizza, String description, double price, String token) throws NoPermissionException {
+	public Pizza addPizza(@WebParam(name = "name_pizza") String name_pizza, @WebParam(name = "description") String description, @WebParam(name="Price") double price, @WebParam(name = "token_auth") String token) throws NoPermissionException, InvalidTokenException {
 		if (userManager.getTokenPermission(token) == PERMISSION.ROOT)
 		{
 			if (name_pizza.equals("") == false) 
@@ -53,7 +54,7 @@ public class ManagePizzasServiceImpl implements ManagePizzasService {
 	}
 	
 	
-	public Pizza deletePizza(int id, String token) throws NoPermissionException {
+	public Pizza deletePizza(@WebParam(name = "id") int id, @WebParam(name = "token_auth") String token) throws NoPermissionException, InvalidTokenException {
 		if (userManager.getTokenPermission(token) == PERMISSION.ROOT)
 		{
 			Pizza pizza = this.getPizzaById(id);
@@ -73,7 +74,7 @@ public class ManagePizzasServiceImpl implements ManagePizzasService {
 		return this.pizzas ;
 	}
 
-	public Pizza getPizzaById(int id) {
+	public Pizza getPizzaById(@WebParam(name = "id") int id) {
 		for ( Pizza check_bdd_pizza : pizzas ) {
 			if (check_bdd_pizza.getId_pizza() == id) {
 				return check_bdd_pizza ;
@@ -82,9 +83,9 @@ public class ManagePizzasServiceImpl implements ManagePizzasService {
 		return null;
 	}
 	
-	public Pizza getPizzaByName(String name) {
+	public Pizza getPizzaByName(@WebParam(name = "name") String name) {
 		for ( Pizza check_bdd_pizza : pizzas ) {
-			if (check_bdd_pizza.getName_pizza() == name) {
+			if (check_bdd_pizza.getName_pizza().equals(name)) {
 				return check_bdd_pizza ;
 			}
 		}

@@ -21,6 +21,12 @@
         <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+	    <servlet>
+        <display-name>ManagerPizzasService</display-name>
+        <servlet-name>manage_pizzas</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <session-config>
         <session-timeout>60</session-timeout>
     </session-config>

@@ -1,5 +1,7 @@
 package fr.ensibs.common;
 
+import javax.xml.bind.annotation.XmlElement;
+
 /**
  * Class that design a customer or an administrator
  * @author Nadjim ABASY and Robin ASPE
@@ -8,10 +10,12 @@ public class Person {
 	
 	public enum PERMISSION {NONE, USER, ROOT};
 	
-	private int id_person;
+	@XmlElement(name = "id")
+	private int id_person;	
 	private String name_user;
 	private String psw;
 	private String token;
+	@XmlElement(name="permission")
 	private PERMISSION permission = PERMISSION.NONE;
 	
 	/**

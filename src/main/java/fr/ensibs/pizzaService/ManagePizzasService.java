@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import fr.ensibs.common.InvalidTokenException;
 import fr.ensibs.common.NoPermissionException;
 import fr.ensibs.common.Order;
 import fr.ensibs.common.Pizza;
@@ -19,8 +20,9 @@ public interface ManagePizzasService {
 	 * @param price the price of the pizza
 	 * @return message information to indicate whether the pizza is added or not
 	 * @throws NoPermissionException 
+	 * @throws InvalidTokenException 
 	 */
-	Pizza addPizza(@WebParam(name = "name_pizza") String name_pizza, @WebParam(name = "description") String description, @WebParam(name = "price") double price, String token) throws NoPermissionException;
+	Pizza addPizza(@WebParam(name = "name_pizza") String name_pizza, @WebParam(name = "description") String description, @WebParam(name = "price") double price, @WebParam(name = "token_auth") String token) throws NoPermissionException, InvalidTokenException;
 	
 	/**
 	 * Method to delete a pizza from the menu
@@ -28,8 +30,9 @@ public interface ManagePizzasService {
 	 * @param token a validate token
 	 * @return message information to indicate whether the pizza is deleted or not
 	 * @throws NoPermissionException 
+	 * @throws InvalidTokenException 
 	 */
-	Pizza deletePizza(@WebParam(name = "name_pizza") int id_pizza, String token) throws NoPermissionException;
+	Pizza deletePizza(@WebParam(name = "name_pizza") int id_pizza, @WebParam(name = "token_auth") String token) throws NoPermissionException, InvalidTokenException;
 	
 	/**
 	 * Method to display the menu of the pizzeria

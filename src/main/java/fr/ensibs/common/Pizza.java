@@ -1,5 +1,11 @@
 package fr.ensibs.common;
 
+import javax.xml.bind.annotation.XmlElement;
+
+/**
+ * Class that design a single Pizza object
+ * @author Nadjim ABASY and Robin ASPE
+ */
 public class Pizza {
 	private int id_pizza;
 	private String name_pizza ;

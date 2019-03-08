@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import fr.ensibs.common.InvalidTokenException;
 import fr.ensibs.common.NoPermissionException;
 import fr.ensibs.common.Order;
 import fr.ensibs.common.Pizza;
@@ -12,7 +13,7 @@ import fr.ensibs.common.Person.PERMISSION;
 import fr.ensibs.userService.ManageUsersService;
 import fr.ensibs.pizzaService.ManagePizzasService;
 
-@WebService(endpointInterface="fr.ensibs.pizzaService.ManageOrdersServiceImpl", serviceName="ManageOrdersService", portName="ManageOrdersServicePort")
+@WebService(endpointInterface="fr.ensibs.orderService.ManageOrdersServiceImpl", serviceName="ManageOrdersService", portName="ManageOrdersServicePort")
 public class ManageOrdersServiceImpl implements ManageOrdersService {
 	
 	private ArrayList<Order> orders;
@@ -33,7 +34,7 @@ public class ManageOrdersServiceImpl implements ManageOrdersService {
 		this.pizzaManager = pizzaManager;
 	}
 	
-	public Order orderPizza(int id_pizza, int quantity, String token) throws NoPermissionException 
+	public Order orderPizza(@WebParam(name = "id_pizza") int id_pizza, @WebParam(name = "quantity") int quantity, @WebParam(name = "token_auth") String token) throws NoPermissionException, InvalidTokenException 
 	{		
 		if (userManager.getTokenPermission(token) == PERMISSION.USER)
 		{
@@ -53,7 +54,7 @@ public class ManageOrdersServiceImpl implements ManageOrdersService {
 			throw new NoPermissionException(PERMISSION.USER);
 	}
 
-	public Order cancelOrderPizza(int id_order, String token) throws NoPermissionException {
+	public Order cancelOrderPizza(@WebParam(name = "id") int id_order, @WebParam(name = "token_auth") String token) throws NoPermissionException, InvalidTokenException {
 		if (userManager.getTokenPermission(token) == PERMISSION.USER)
 		{
 			Order order = this.getOrderById(id_order);
@@ -74,7 +75,7 @@ public class ManageOrdersServiceImpl implements ManageOrdersService {
 	}
 	
 
-	public ArrayList<Order> getMyOrders(String token) throws NoPermissionException {
+	public ArrayList<Order> getMyOrders(@WebParam(name = "token") String token) throws NoPermissionException, InvalidTokenException {
 		if (userManager.getTokenPermission(token) == PERMISSION.USER)
 		{
 			ArrayList<Order> myOrders = new ArrayList<Order>();

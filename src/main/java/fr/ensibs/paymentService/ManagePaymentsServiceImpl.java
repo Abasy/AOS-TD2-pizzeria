@@ -2,8 +2,11 @@ package fr.ensibs.paymentService;
 
 import java.util.ArrayList;
 
+import javax.jws.WebParam;
+import javax.jws.WebResult;
 import javax.jws.WebService;
 
+import fr.ensibs.common.InvalidTokenException;
 import fr.ensibs.common.NoPermissionException;
 import fr.ensibs.common.Order;
 import fr.ensibs.common.Order.STATUS;
@@ -23,7 +26,7 @@ public class ManagePaymentsServiceImpl implements ManagePaymentsService {
 		this.userManager = userManager;
 	}
 	
-	public Order payOrder(int id_order, String token) throws NoPermissionException {
+	public Order payOrder(@WebParam(name = "id_order") int id_order, @WebParam(name = "token_auth") String token) throws NoPermissionException, InvalidTokenException {
 		if (userManager.getTokenPermission(token) == PERMISSION.USER)
 		{
 			ArrayList<Order> myOrders = orderManager.getMyOrders(token);
@@ -47,25 +50,25 @@ public class ManagePaymentsServiceImpl implements ManagePaymentsService {
 			throw new NoPermissionException(PERMISSION.USER);
 	}
 	
-	public String previewInvoice(String token) throws NoPermissionException 
+	@WebResult(name = "return_message")
+	public String previewInvoice(@WebParam(name = "token_user") String token) throws NoPermissionException, InvalidTokenException 
 	{
 		if (userManager.getTokenPermission(token) == PERMISSION.USER)
 		{
-			Person p = userManager.getPersonByToken(token);
-			String result = "";
+			String result = new String();
 			ArrayList<Order> myOrders = orderManager.getMyOrders(token);
 			double totalPrice = 0;
+			result = result.concat("--------------------------\n");
+			result = result.concat("---     Your orders:   ---\n");
+			result = result.concat("--------------------------\n");
 			for (Order order : myOrders)
 			{
-				totalPrice += order.getTotal_price();
+				totalPrice = totalPrice + order.getTotal_price();
+				result = result.concat(order.toString());
+				result = result.concat("\n");
 			}
-			result.concat("--------------------------\n");
-			result.concat("---     Your orders:   ---\n");
-			result.concat("--------------------------\n");
-			result.concat(myOrders.toString());
-			result.concat("\n");
-			result.concat("--------------------------\n");
-			result.concat("--- Total price: " + totalPrice);
+			result = result.concat("--------------------------\n");
+			result = result.concat("--- Total price: " + totalPrice);
 			return result;
 		}
 		else throw new NoPermissionException(PERMISSION.USER);

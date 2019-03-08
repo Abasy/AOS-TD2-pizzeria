@@ -3,6 +3,7 @@ package fr.ensibs.paymentService;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import fr.ensibs.common.InvalidTokenException;
 import fr.ensibs.common.NoPermissionException;
 import fr.ensibs.common.Order;
 
@@ -14,14 +15,16 @@ public interface ManagePaymentsService {
 	 * @param token a validate token
 	 * @return Set the status of the order, and display an information message of the operation done
 	 * @throws NoPermissionException 
+	 * @throws InvalidTokenException 
 	 */
-	Order payOrder(@WebParam(name = "id_order") int id_order, String token) throws NoPermissionException ;
+	Order payOrder(@WebParam(name = "id_order") int id_order, @WebParam(name = "token_auth") String token) throws NoPermissionException, InvalidTokenException ;
 	
 	/**
 	 * Method to visualize the bill or the order if it's not yet payed
 	 * @param token a validate existing token
 	 * @return the information about the order
 	 * @throws NoPermissionException 
+	 * @throws InvalidTokenException 
 	 */
-	String previewInvoice(@WebParam(name = "token") String token) throws NoPermissionException ;
+	String previewInvoice(@WebParam(name = "token") String token) throws NoPermissionException, InvalidTokenException ;
 }

@@ -7,10 +7,14 @@
         url-pattern='/pizzeria.ensibs.fr/manage_users'/>
 	<endpoint
         name='ManageOrdersService'
-        implementation='fr.ensibs.pizzaService.ManageOrdersServiceImpl'
+        implementation='fr.ensibs.orderService.ManageOrdersServiceImpl'
         url-pattern='/pizzeria.ensibs.fr/manage_orders'/>
 	<endpoint
         name='ManagePaymentsService'
         implementation='fr.ensibs.paymentService.ManagePaymentsServiceImpl'
         url-pattern='/pizzeria.ensibs.fr/manage_payments'/>
+    <endpoint
+        name='ManagePizzasService'
+        implementation='fr.ensibs.pizzaService.ManagePizzasServiceImpl'
+        url-pattern='/pizzeria.ensibs.fr/manage_pizzas'/>
 </endpoints>
